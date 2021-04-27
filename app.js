@@ -1,9 +1,10 @@
-let provinceSelector = document.getElementById("my-select");
-let spinner = document.getElementById("spinner");
-let contentContainer = document.getElementById("content-container");
+const provinceSelector = document.getElementById("my-select");
+const spinner = document.getElementById("spinner");
+const contentContainer = document.getElementById("content-container");
+const pieChart = document.querySelector("#chart");
 
-let url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/stats?country=Pakistan";
-let restData = {
+const url = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/stats?country=Pakistan";
+const restData = {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-key": "2afdc9fa8cmsheaa6d800875c59ap1ef7c6jsn8f0411164b7f",
@@ -11,16 +12,19 @@ let restData = {
 	}
 };
 
-let handleData = (data)=>{
+const handleData = (data)=>{
     provinceSelector.addEventListener("change",(e)=>{
         if(e.target.value !== "none"){
+            if(pieChart.childNodes[0] !== undefined){
+              pieChart.removeChild(pieChart.childNodes[0]);
+            }
             let index = Number(e.target.value);
             let province = data[index];
             renderChart(province);
         }
     })    
 }
-let renderChart = (province)=>{
+const renderChart = (province)=>{
     var options = {
         series: [province.confirmed, province.recovered, province.deaths],
         chart: {
@@ -41,19 +45,16 @@ let renderChart = (province)=>{
       }]
       };
     
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    var chart = new ApexCharts(pieChart, options);
     chart.render();
 }
 
-let getData = async (a, b) => {
-    let response = await fetch(a, b);
+const getData = async (url, restData) => {
+    let response = await fetch(url, restData);
     let data = await response.json();
-    handleData(data.data.covid19Stats);
     spinner.style.display = "none";
     contentContainer.style.display = "flex";
+    handleData(data.data.covid19Stats);
 }
-
-
-
 
 getData(url, restData);

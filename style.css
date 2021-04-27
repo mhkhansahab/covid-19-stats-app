@@ -44,3 +44,14 @@ body{
 #spinner{
     margin-top: 100px;
 }
+
+#chart{
+    width: 400px;
+    height: 240px;
+}
+
+@media screen and (max-width:512px) {
+    #chart{
+        width: 300px;
+    }
+}
